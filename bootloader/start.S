@@ -1,7 +1,11 @@
 /*
  * bootloader to JZ2440
  *
- * 
+ * watchdog
+ * clock
+ * SDRAM
+ * nand_init
+ * copy_code_to_sdram
  */
 #define MEM_CTL_BASE    0x48000000
 
