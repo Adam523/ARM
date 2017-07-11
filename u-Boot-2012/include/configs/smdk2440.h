@@ -39,7 +39,11 @@
 #define CONFIG_S3C2440
 #define CONFIG_SMDK2410		/* on a SAMSUNG SMDK2410 Board */
 
-#define CONFIG_SYS_TEXT_BASE	0x0
+/* the addr of sdram is 0x30000000, the size is 64M, the reserved size for program
+ * is 512kb. But after compled the size is aroud 700kb, 1M was left to the program
+ * 0x3000 0000 + 0x0400 0000 - 0x0010 0000 = 0x33f0 0000
+ */
+#define CONFIG_SYS_TEXT_BASE	0x33f00000 
 
 #define CONFIG_SYS_ARM_CACHE_WRITETHROUGH
 

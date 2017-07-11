@@ -1,5 +1,4 @@
-
-/* NAND FLASH控制器 */
+/* NAND FLASH control register */
 #define NFCONF (*((volatile unsigned long *)0x4E000000))
 #define NFCONT (*((volatile unsigned long *)0x4E000004))
 #define NFCMMD (*((volatile unsigned char *)0x4E000008))
@@ -7,27 +6,9 @@
 #define NFDATA (*((volatile unsigned char *)0x4E000010))
 #define NFSTAT (*((volatile unsigned char *)0x4E000020))
 
-/* GPIO */
-#define GPHCON              (*(volatile unsigned long *)0x56000070)
-#define GPHUP               (*(volatile unsigned long *)0x56000078)
+void nand_read_ll(unsigned int addr, unsigned char *buf, unsigned int len);
 
-/* UART registers*/
-#define ULCON0              (*(volatile unsigned long *)0x50000000)
-#define UCON0               (*(volatile unsigned long *)0x50000004)
-#define UFCON0              (*(volatile unsigned long *)0x50000008)
-#define UMCON0              (*(volatile unsigned long *)0x5000000c)
-#define UTRSTAT0            (*(volatile unsigned long *)0x50000010)
-#define UTXH0               (*(volatile unsigned char *)0x50000020)
-#define URXH0               (*(volatile unsigned char *)0x50000024)
-#define UBRDIV0             (*(volatile unsigned long *)0x50000028)
-
-#define TXD0READY   (1<<2)
-
-
-void nand_read(unsigned int addr, unsigned char *buf, unsigned int len);
-
-
-int isBootFromNorFlash(void)
+static int isBootFromNorFlash(void)
 {
 	volatile int *p = (volatile int *)0;
 	int val;
@@ -36,13 +17,13 @@ int isBootFromNorFlash(void)
 	*p = 0x12345678;
 	if (*p == 0x12345678)
 	{
-		/* 写成功, 是nand启动 */
+		/* if ture, system booted from NAND Flash */
 		*p = val;
 		return 0;
 	}
 	else
 	{
-		/* NOR不能像内存一样写 */
+		/* system booted from NOR Flash */
 		return 1;
 	}
 }
@@ -51,7 +32,7 @@ void copy_code_to_sdram(unsigned char *src, unsigned char *dest, unsigned int le
 {	
 	int i = 0;
 	
-	/* 如果是NOR启动 */
+	/* From NOR Flash */
 	if (isBootFromNorFlash())
 	{
 		while (i < len)
@@ -63,48 +44,48 @@ void copy_code_to_sdram(unsigned char *src, unsigned char *dest, unsigned int le
 	else
 	{
 		//nand_init();
-		nand_read((unsigned int)src, dest, len);
+		nand_read_ll((unsigned int)src, dest, len);
 	}
 }
 
 void clear_bss(void)
 {
-	extern int __bss_start, __bss_end;
+	extern int __bss_start, __bss_end__;
 	int *p = &__bss_start;
 	
-	for (; p < &__bss_end; p++)
+	for (; p < &__bss_end__; p++)
 		*p = 0;
 }
 
-void nand_init(void)
+void nand_init_ll(void)
 {
 #define TACLS   0
 #define TWRPH0  1
 #define TWRPH1  0
-	/* 设置时序 */
+	/* setup timing */
 	NFCONF = (TACLS<<12)|(TWRPH0<<8)|(TWRPH1<<4);
-	/* 使能NAND Flash控制器, 初始化ECC, 禁止片选 */
+	/* Enable NAND Flash control register, initialize ECC and disable chip select */
 	NFCONT = (1<<4)|(1<<1)|(1<<0);	
 }
 
-void nand_select(void)
+static void nand_select(void)
 {
 	NFCONT &= ~(1<<1);	
 }
 
-void nand_deselect(void)
+static void nand_deselect(void)
 {
 	NFCONT |= (1<<1);	
 }
 
-void nand_cmd(unsigned char cmd)
+static void nand_cmd(unsigned char cmd)
 {
 	volatile int i;
 	NFCMMD = cmd;
 	for (i = 0; i < 10; i++);
 }
 
-void nand_addr(unsigned int addr)
+static void nand_addr(unsigned int addr)
 {
 	unsigned int col  = addr % 2048;
 	unsigned int page = addr / 2048;
@@ -123,39 +104,39 @@ void nand_addr(unsigned int addr)
 	for (i = 0; i < 10; i++);	
 }
 
-void nand_wait_ready(void)
+static void nand_wait_ready(void)
 {
 	while (!(NFSTAT & 1));
 }
 
-unsigned char nand_data(void)
+static unsigned char nand_data(void)
 {
 	return NFDATA;
 }
 
-void nand_read(unsigned int addr, unsigned char *buf, unsigned int len)
+void nand_read_ll(unsigned int addr, unsigned char *buf, unsigned int len)
 {
 	int col = addr % 2048;
 	int i = 0;
 		
-	/* 1. 选中 */
+	/* 1. select NAND Flash */
 	nand_select();
 
 	while (i < len)
 	{
-		/* 2. 发出读命令00h */
+		/* 2. send cmd 00h */
 		nand_cmd(0x00);
 
-		/* 3. 发出地址(分5步发出) */
+		/* 3. send addr (5 cycles) */
 		nand_addr(addr);
 
-		/* 4. 发出读命令30h */
+		/* 4. send cmd 30h */
 		nand_cmd(0x30);
 
-		/* 5. 判断状态 */
+		/* 5. wait for ready */
 		nand_wait_ready();
 
-		/* 6. 读数据 */
+		/* 6. read data */
 		for (; (col < 2048) && (i < len); col++)
 		{
 			buf[i] = nand_data();
@@ -166,70 +147,7 @@ void nand_read(unsigned int addr, unsigned char *buf, unsigned int len)
 		col = 0;
 	}
 
-	/* 7. 取消选中 */		
+	/* 7. deselect */		
 	nand_deselect();
-}
-
-#define PCLK            50000000    // init.c中的clock_init函数设置PCLK为50MHz
-#define UART_CLK        PCLK        //  UART0的时钟源设为PCLK
-#define UART_BAUD_RATE  115200      // 波特率
-#define UART_BRD        ((UART_CLK  / (UART_BAUD_RATE * 16)) - 1)
-
-/*
- * 初始化UART0
- * 115200,8N1,无流控
- */
-void uart0_init(void)
-{
-    GPHCON  |= 0xa0;    // GPH2,GPH3用作TXD0,RXD0
-    GPHUP   = 0x0c;     // GPH2,GPH3内部上拉
-
-    ULCON0  = 0x03;     // 8N1(8个数据位，无较验，1个停止位)
-    UCON0   = 0x05;     // 查询方式，UART时钟源为PCLK
-    UFCON0  = 0x00;     // 不使用FIFO
-    UMCON0  = 0x00;     // 不使用流控
-    UBRDIV0 = UART_BRD; // 波特率为115200
-}
-
-/*
- * 发送一个字符
- */
-void putc(unsigned char c)
-{
-    /* 等待，直到发送缓冲区中的数据已经全部发送出去 */
-    while (!(UTRSTAT0 & TXD0READY));
-    
-    /* 向UTXH0寄存器中写入数据，UART即自动将它发送出去 */
-    UTXH0 = c;
-}
-
-void puts(char *str)
-{
-	int i = 0;
-	while (str[i])
-	{
-		putc(str[i]);
-		i++;
-	}
-}
-
-void puthex(unsigned int val)
-{
-	/* 0x1234abcd */
-	int i;
-	int j;
-	
-	puts("0x");
-
-	for (i = 0; i < 8; i++)
-	{
-		j = (val >> ((7-i)*4)) & 0xf;
-		if ((j >= 0) && (j <= 9))
-			putc('0' + j);
-		else
-			putc('A' + j - 0xa);
-		
-	}
-	
 }
 
