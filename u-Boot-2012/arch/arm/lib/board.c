@@ -256,7 +256,7 @@ init_fnc_t *init_sequence[] = {
 	NULL,
 };
 
-void board_init_f(ulong bootflag)
+unsigned int board_init_f(ulong bootflag)
 {
 	bd_t *bd;
 	init_fnc_t **init_fnc_ptr;
@@ -439,6 +439,8 @@ void board_init_f(ulong bootflag)
 	// relocate_code(addr_sp, id, addr);
 
 	/* NOTREACHED - relocate_code() does not return */
+	/* id for board_init_r */
+	return (unsigned int) id;
 }
 
 #if !defined(CONFIG_SYS_NO_FLASH)
