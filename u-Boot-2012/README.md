@@ -1,7 +1,9 @@
-Modify u-boot-2012.04.01 for s3c2440
+#Modify u-boot-2012.04.01 for s3c2440
 
-1. Create smdk2440.h in /include/configs/
+## Stage 1
+- set clock 
+- initialize SDRAM
 
-
-2. Create lowlevel_init.S smdk2440.c and Makefile in /board/samsung/smdk2440/
-
+### bugs
+1. no smdk2440 configure: change file name
+2. the output of com is mojibake
