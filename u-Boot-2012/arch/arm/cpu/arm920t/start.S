@@ -169,9 +169,33 @@ copyex:
 
 	/* FCLK:HCLK:PCLK = 1:2:4 */
 	/* default FCLK is 120 MHz ! */
-	ldr	r0, =CLKDIVN
-	mov	r1, #3
-	str	r1, [r0]
+	/*
+	 * ldr	r0, =CLKDIVN
+	 * mov	r1, #3
+	 * str	r1, [r0]
+	 */
+
+	/* setup clock, and ICACHE */
+	
+	ldr r0, =0x4c000014
+	mov r1, #0x05;			  		/* FCLK:HCLK:PCLK=1:4:8 */
+	str r1, [r0]
+
+	/* set CPU bus to “asynchronous bus mode” */
+	mrc	p15, 0, r1, c1, c0, 0		/* control register */ 
+	orr	r1, r1, #0xc0000000			/* “asynchronous bus mode” */
+	mcr	p15, 0, r1, c1, c0, 0		/* control register */
+
+#define S3C2440_MPLL_400MHZ     ((0x5c<<12)|(0x01<<4)|(0x01))
+	ldr r0, =0x4c000004
+	ldr r1, =S3C2440_MPLL_400MHZ    /* FCLK:HCLK:PCLK=400:100:50MHz */
+	str r1, [r0]
+
+	/* start ICACHE */
+	mrc p15, 0, r0, c1, c0, 0	@ read control reg
+	orr r0, r0, #(1<<12)
+	mcr	p15, 0, r0, c1, c0, 0   @ write it back
+
 #endif	/* CONFIG_S3C24X0 */
 
 	/*
