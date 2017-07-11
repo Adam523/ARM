@@ -369,8 +369,9 @@ unsigned int board_init_f(ulong bootflag)
 	 * reserve memory for U-Boot code, data & bss
 	 * round down to next 4 kB limit
 	 */
-	addr -= gd->mon_len;
-	addr &= ~(4096 - 1);
+	//addr -= gd->mon_len;
+	//addr &= ~(4096 - 1);
+	addr = CONFIG_SYS_TEXT_BASE;
 
 	debug("Reserving %ldk for U-Boot at: %08lx\n", gd->mon_len >> 10, addr);
 
