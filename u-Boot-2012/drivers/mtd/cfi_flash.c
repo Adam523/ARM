@@ -32,7 +32,9 @@
  */
 
 /* The DEBUG define must be before common to enable debugging */
-/* #define DEBUG	*/
+
+//#define _DEBUG	1
+//#define DEBUG	1
 
 #include <common.h>
 #include <asm/processor.h>

@@ -74,6 +74,8 @@
 
 /* MXIC */
 #define MX29LV040	0x004F
+#define MT29LV160DB 0X2249
+
 
 /* WINBOND */
 #define W39L040A	0x00D6
@@ -353,6 +355,7 @@ static const struct amd_flash_info jedec_table[] = {
 		.mfr_id		= (u16)STM_MANUFACT,
 		.dev_id		= STM29F400BB,
 		.name		= "ST Micro M29F400BB",
+		/* U
 		.uaddr		= {
 			[1] = MTD_UADDR_0x0555_0x02AA /* x16 */
 		},
@@ -367,6 +370,27 @@ static const struct amd_flash_info jedec_table[] = {
 		}
 	},
 #endif
+	/* the NOR flash used on board is MT29LV160DB */
+	{
+		.mfr_id		= (u16)MX_MANUFACT,
+		.dev_id		= MT29LV160DB,
+		.name		= "MT29LV160DB",
+		.uaddr		= {
+		/* NOR Flash unlock address */
+			[1] = MTD_UADDR_0x0555_0x02AA /* x16 */
+		},
+		.DevSize	= SIZE_2MiB,
+		.CmdSet		= P_ID_AMD_STD,
+		.NumEraseRegions= 4,
+		.regions	= {
+				ERASEINFO(0x04000, 1),
+				ERASEINFO(0x02000, 2),
+				ERASEINFO(0x08000, 1),
+				ERASEINFO(0x10000, 31),
+
+		}
+	},
+
 };
 
 static inline void fill_info(flash_info_t *info, const struct amd_flash_info *jedec_entry, ulong base)

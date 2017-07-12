@@ -92,6 +92,11 @@ _bss_end_ofs:
 .globl _end_ofs
 _end_ofs:
 	.word _end - _start
+		
+.globl base_sp
+base_sp:
+	.long 0
+
 
 #ifdef CONFIG_USE_IRQ
 /* IRQ stack memory (calculated at run-time) */
@@ -237,7 +242,10 @@ call_board_init_f:
 	 * malloc_start = dest_addr - TOTAL_MALLOC_LEN; dest_addr equals to relocate address
 	 */
 	ldr r1, _TEXT_BASE
+	ldr sp, base_sp 
+	
 	bl board_init_r 
+
 /*
  * We are done. Do not return, instead branch to second part of board
  * initialization, now running from RAM.
