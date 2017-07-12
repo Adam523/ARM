@@ -80,15 +80,15 @@
 /************************************************************
  * USB support (currently only works with D-cache off)
  ************************************************************/
-#define CONFIG_USB_OHCI
-#define CONFIG_USB_KEYBOARD
-#define CONFIG_USB_STORAGE
-#define CONFIG_DOS_PARTITION
+//#define CONFIG_USB_OHCI
+//#define CONFIG_USB_KEYBOARD
+//#define CONFIG_USB_STORAGE
+//#define CONFIG_DOS_PARTITION
 
 /************************************************************
  * RTC
  ************************************************************/
-#define CONFIG_RTC_S3C24X0
+//#define CONFIG_RTC_S3C24X0
 
 
 #define CONFIG_BAUDRATE		115200
@@ -96,10 +96,10 @@
 /*
  * BOOTP options
  */
-#define CONFIG_BOOTP_BOOTFILESIZE
-#define CONFIG_BOOTP_BOOTPATH
-#define CONFIG_BOOTP_GATEWAY
-#define CONFIG_BOOTP_HOSTNAME
+//#define CONFIG_BOOTP_BOOTFILESIZE
+//#define CONFIG_BOOTP_BOOTPATH
+//#define CONFIG_BOOTP_GATEWAY
+//#define CONFIG_BOOTP_HOSTNAME
 
 /*
  * Command line configuration.
@@ -109,12 +109,12 @@
 #define CONFIG_CMD_BSP
 #define CONFIG_CMD_CACHE
 #define CONFIG_CMD_DATE
-#define CONFIG_CMD_DHCP
+//#define CONFIG_CMD_DHCP
 #define CONFIG_CMD_ELF
 #define CONFIG_CMD_NAND
 #define CONFIG_CMD_PING
 #define CONFIG_CMD_REGINFO
-#define CONFIG_CMD_USB
+//#define CONFIG_CMD_USB
 
 #define CONFIG_SYS_HUSH_PARSER
 #define CONFIG_SYS_PROMPT_HUSH_PS2	"> "
@@ -128,7 +128,9 @@
 
 #define CONFIG_NETMASK		255.255.255.0
 #define CONFIG_IPADDR		192.168.1.17
-#define CONFIG_SERVERIP		192.168.1.1
+#define CONFIG_SERVERIP		192.168.1.29
+#define CONFIG_ETHADDR		00:e3:28:21:32:f4 
+
 
 #if defined(CONFIG_CMD_KGDB)
 #define CONFIG_KGDB_BAUDRATE	115200	/* speed to run kgdb serial port */
@@ -165,6 +167,8 @@
 #define CONFIG_LZO
 #define CONFIG_LZMA
 
+#define CONFIG_BOOTARGS  "console=ttySAC0 root=/dev/mtdblock3 "
+#define CONFIG_BOOTCOMMAND "nand read 30000000 0xabc 0x200000;bootm 30000000"
 /*-----------------------------------------------------------------------
  * Stack sizes
  *
@@ -235,6 +239,7 @@
 /*
  * File system
  */
+#if 0
 #define CONFIG_CMD_FAT
 #define CONFIG_CMD_EXT2
 #define CONFIG_CMD_UBI
@@ -244,6 +249,7 @@
 #define CONFIG_MTD_PARTITIONS
 #define CONFIG_YAFFS2
 #define CONFIG_RBTREE
+#endif
 
 /* additions for new relocation code, must be added to all boards */
 #define CONFIG_SYS_SDRAM_BASE	PHYS_SDRAM_1
