@@ -355,7 +355,6 @@ static const struct amd_flash_info jedec_table[] = {
 		.mfr_id		= (u16)STM_MANUFACT,
 		.dev_id		= STM29F400BB,
 		.name		= "ST Micro M29F400BB",
-		/* U
 		.uaddr		= {
 			[1] = MTD_UADDR_0x0555_0x02AA /* x16 */
 		},

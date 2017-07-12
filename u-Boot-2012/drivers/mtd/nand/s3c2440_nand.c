@@ -64,32 +64,6 @@ static void s3c2440_hwcontrol(struct mtd_info *mtd, int dat, unsigned int ctrl)
 		writeb(dat, &nand->nfaddr);
 	}	
 
-/*
-	debug("hwcontrol(): 0x%02x 0x%02x\n", cmd, ctrl);
-
-	if (ctrl & NAND_CTRL_CHANGE) {
-		ulong IO_ADDR_W = (ulong)nand;
-
-		if (!(ctrl & NAND_CLE))
-			IO_ADDR_W |= S3C2410_ADDR_NCLE;
-		if (!(ctrl & NAND_ALE))
-			IO_ADDR_W |= S3C2410_ADDR_NALE;
-
-		chip->IO_ADDR_W = (void *)IO_ADDR_W;
-
-		if (ctrl & NAND_NCE) /* chip select enable */
-/*
-			writel(readl(&nand->nfcont) & ~(1<<1),
-			       &nand->nfcont);
-		else /* deselect chip */
-/*
-			writel(readl(&nand->nfcont) | (1<<1),
-			       &nand->nfcont);
-*/
-	}
-
-	if (cmd != NAND_CMD_NONE)
-		writeb(cmd, chip->IO_ADDR_W);
 }
 
 static int s3c2440_dev_ready(struct mtd_info *mtd)
