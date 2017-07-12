@@ -68,7 +68,7 @@ static void s3c2440_hwcontrol(struct mtd_info *mtd, int dat, unsigned int ctrl)
 
 static int s3c2440_dev_ready(struct mtd_info *mtd)
 {
-	struct s3c2440_nand *nand = s3c2430_get_base_nand();
+	struct s3c2440_nand *nand = s3c2440_get_base_nand();
 	debug("dev_ready\n");
 	return readl(&nand->nfstat) & 0x01;
 }
@@ -111,7 +111,7 @@ static int s3c2410_nand_correct_data(struct mtd_info *mtd, u_char *dat,
 
 static void s3c2440_nand_select(struct mtd_info *mtd, int chipnr)
 {
-	struct s3c2440_nand *nand = s3c2430_get_base_nand();
+	struct s3c2440_nand *nand = s3c2440_get_base_nand();
 
 	switch (chipnr) {
 	case -1: // deselct
