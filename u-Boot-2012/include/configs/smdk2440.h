@@ -167,8 +167,10 @@
 #define CONFIG_LZO
 #define CONFIG_LZMA
 
+#define CONFIG_CMD_NAND_YAFFS
+
 #define CONFIG_BOOTARGS  "console=ttySAC0 root=/dev/mtdblock3 "
-#define CONFIG_BOOTCOMMAND "nand read 30000000 0xabc 0x200000;bootm 30000000"
+#define CONFIG_BOOTCOMMAND "nand read 30000000 kernel;bootm 30000000" //the kernel = 0xabc 0x200000, must set after mtdparts seeting
 /*-----------------------------------------------------------------------
  * Stack sizes
  *
@@ -205,11 +207,28 @@
 #define CONFIG_SYS_FLASH_BANKS_LIST     { CONFIG_SYS_FLASH_BASE }
 #define CONFIG_SYS_MAX_FLASH_SECT	(128)
 
+#if 0  // for NOR Flash
 #define CONFIG_ENV_ADDR			(CONFIG_SYS_FLASH_BASE + 0x070000)
 #define CONFIG_ENV_IS_IN_FLASH
 #define CONFIG_ENV_SIZE			0x10000
 /* allow to overwrite serial and ethaddr */
 #define CONFIG_ENV_OVERWRITE
+#endif
+#define CONFIG_ENV_IS_IN_NAND
+#define CONFIG_ENV_OFFSET 0x00040000
+#define CONFIG_ENV_SIZE   0x00020000
+#define CONFIG_ENV_RANGE  0x00020000
+#define CONFIG_CMD_MTDPARTS
+#define CONFIG_MTD_DEVICE		/* needed for mtdparts commands */
+#define MTDIDS_DEFAULT		"nand0=nand0"
+#define MTDPARTS_DEFAULT	"mtdparts=nand0:256k(u-boot),128k(params),2M(kernel),-(rootfs)"
+
+
+
+
+
+
+
 
 /*
  * Size of malloc() pool
