@@ -142,6 +142,30 @@ _main
 ## Transplant log
 
 ### creating board information
-* /board/samsung/smdk2440/
+this part of codes borrowed from SMDK5250 in u-Boot-2017.05 and SMDK2410 in u-Boot 2012.04,01
+　　arch/arm/Kconfig
+　　board/samsung/smdk2440/Kconfig MAINTAINERS Makefile lowlevel_init.S smdk2440.c
+　　configs/smdk2440_deconfig
+　　include/configs/smdk2440.h
+　　
+　　
+　　
+
+#### /board/samsung/MAINTAINERS
+the belowing code needed to be created
+
+　　board/samsung/smdk2440/
+
+　　include/configs/smdk2440.h
+
+　　configs/smdk2440_defconfig
+
+#### /arch/arm/Kconfig
+
+　　add board information
+
+
+
+
 
 
