@@ -80,12 +80,29 @@ copyex:
 	str	r1, [r0]
 # endif
 
-	/* FCLK:HCLK:PCLK = 1:2:4 */
-	/* default FCLK is 120 MHz ! */
 	ldr	r0, =CLKDIVN
-	mov	r1, #3
+	/* modified */
+	/* FCLK:HCLK:PCLK=1:4:8 */
+	mov	r1, #0x05
 	str	r1, [r0]
 #endif	/* CONFIG_S3C24X0 */
+
+	/* SET CPU BUS MODE TO asynchronous bus mode */
+	mrc p15, 0, r1, c1, c0, 0   // read control register
+	orr r1, r1, #0xc0000000     // set asynchromous bus mode
+	mcr p15, 0, r1, c1, c0, 0   // write to control register
+	
+#define S3C2440_MPLL_400MHZ     ((0x5c<<12)|(0x01<<4)|(0x01))
+	/* MPLLCON = S3C2440_MPLL_200MHZ */
+	ldr r0, =0x4c000004
+	ldr r1, =S3C2440_MPLL_400MHZ
+	str r1, [r0]
+
+	/* 启动ICACHE */
+	mrc p15, 0, r0, c1, c0, 0	@ read control reg
+	orr r0, r0, #(1<<12)
+	mcr	p15, 0, r0, c1, c0, 0   @ write it back
+
 
 	/*
 	 * we do sys-critical inits only at reboot,
