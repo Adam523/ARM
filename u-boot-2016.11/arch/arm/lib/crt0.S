@@ -64,6 +64,11 @@
  * entry point of crt0 sequence
  */
 
+	.globl	_TEXT_BASE
+_TEXT_BASE: 
+	.word CONFIG_SYS_TEXT_BASE
+
+
 ENTRY(_main)
 
 /*
@@ -82,6 +87,17 @@ ENTRY(_main)
 #else
 	bic	sp, sp, #7	/* 8-byte alignment for ABI compliance */
 #endif
+	bl nand_init_ll
+	mov r0, #0
+	ldr r1, _TEXT_BASE
+	ldr r2, = __bss_start
+	sub r2, r2, r1 
+	bl copy_code_to_sdram 
+	bl clear_bss
+    ldr pc, =call_board_init_f
+
+
+call_board_init_f:
 	mov	r0, sp
 	bl	board_init_f_alloc_reserve
 	mov	sp, r0
