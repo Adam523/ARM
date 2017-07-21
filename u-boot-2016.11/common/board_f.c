@@ -1045,9 +1045,10 @@ static init_fnc_t init_sequence_f[] = {
 #if defined(CONFIG_XTENSA)
 	clear_bss,
 #endif
-#if !defined(CONFIG_ARM) && !defined(CONFIG_SANDBOX)
-	// jump_to_copy,
-#endif
+//#if !defined(CONFIG_ARM) && !defined(CONFIG_SANDBOX)
+	 //jump_to_copy,
+//#endif
+	//debug("Finished init_sequence. \n"),
 	NULL,
 };
 
@@ -1075,13 +1076,13 @@ void board_init_f(ulong boot_flags)
 	gd->flags = boot_flags;
 	gd->have_console = 0;
 
-	if (initcall_run_list(init_sequence_f));
-		//hang();
-
+	if (initcall_run_list(init_sequence_f))
+		hang();
+	debug("Finished init_sequence_f, jump to board_init_f.\n");
 #if !defined(CONFIG_ARM) && !defined(CONFIG_SANDBOX) && \
 		!defined(CONFIG_EFI_APP)
 	/* NOTREACHED - jump_to_copy() does not return */
-	//hang();
+	hang();
 #endif
 }
 

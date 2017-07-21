@@ -8,6 +8,7 @@ SUBLEVEL =
 EXTRAVERSION =
 NAME =
 
+
 # *DOCUMENTATION*
 # To see a list of typical targets execute "make help"
 # More info can be located in ./README
@@ -238,7 +239,6 @@ HOSTOS := $(shell uname -s | tr '[:upper:]' '[:lower:]' | \
 	    sed -e 's/\(cygwin\).*/cygwin/')
 
 export	HOSTARCH HOSTOS
-
 #########################################################################
 
 # set default to nothing for native builds

@@ -17,7 +17,7 @@
  *
  * Startup Code (called from the ARM reset exception vector)
  *
- * do important init only if we don't start from memory!
+ * do important init only if we do not start from memory!
  * relocate armboot to ram
  * setup stack
  * jump to second stage

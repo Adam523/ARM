@@ -12,6 +12,7 @@
 
 #ifndef __CONFIG_H
 #define __CONFIG_H
+#define DEBUG 1
 
 /*
  * High Level Configuration Options
@@ -48,30 +49,35 @@
 /************************************************************
  * USB support (currently only works with D-cache off)
  ************************************************************/
+/*
 #define CONFIG_USB_OHCI
 #define CONFIG_USB_OHCI_S3C24XX
 #define CONFIG_DOS_PARTITION
-
+*/
 /************************************************************
  * RTC
  ************************************************************/
+/*
 #define CONFIG_RTC_S3C24X0
-
+*/
 #define CONFIG_BAUDRATE		115200
 
 /*
  * BOOTP options
  */
+/*
 #define CONFIG_BOOTP_BOOTFILESIZE
 #define CONFIG_BOOTP_BOOTPATH
 #define CONFIG_BOOTP_GATEWAY
 #define CONFIG_BOOTP_HOSTNAME
-
+*/
 /*
  * Command line configuration.
  */
 #define CONFIG_CMD_BSP
+/*
 #define CONFIG_CMD_DATE
+*/
 #define CONFIG_CMD_NAND
 #define CONFIG_CMD_REGINFO
 
@@ -154,8 +160,8 @@
  * NAND configuration
  */
 #ifdef CONFIG_CMD_NAND
-#define CONFIG_NAND_S3C2410
-#define CONFIG_SYS_S3C2410_NAND_HWECC
+#define CONFIG_NAND_S3C2440
+#define CONFIG_SYS_S3C2440_NAND_HWECC
 #define CONFIG_SYS_MAX_NAND_DEVICE	1
 #define CONFIG_SYS_NAND_BASE		0x4E000000
 #endif
@@ -163,13 +169,14 @@
 /*
  * File system
  */
+/*
 #define CONFIG_CMD_UBIFS
 #define CONFIG_CMD_MTDPARTS
 #define CONFIG_MTD_DEVICE
 #define CONFIG_MTD_PARTITIONS
 #define CONFIG_YAFFS2
 #define CONFIG_RBTREE
-
+*/
 /* additions for new relocation code, must be added to all boards */
 #define CONFIG_SYS_SDRAM_BASE	PHYS_SDRAM_1
 #define CONFIG_SYS_INIT_SP_ADDR	(CONFIG_SYS_SDRAM_BASE + 0x1000 - \
