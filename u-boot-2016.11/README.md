@@ -32,7 +32,14 @@ JZ2440 is a very old development board based on Samsung s3c2440 with a ARM920t c
 \include\configs\smdk2440.h
 
 #### debug
+
+----
+Q:make
 ```C
 lib/asm-offsets.c:1: error: bad value (armv4t) for -march= switch
 lib/asm-offsets.c:1: error: bad value (armv4t) for -mtune= switch
 ```
+A: make ARCH=arm CROSS_COMPILE=arm-linux- 
+
+### 2. setup serial port 
+

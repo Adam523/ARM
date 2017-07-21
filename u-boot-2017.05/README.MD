@@ -164,6 +164,21 @@ the belowing code needed to be created
 
 　　add board information
 
+```C
+error: asm/arch/s3c24x0_cpu.h: No such file or directory
+```
+cp /arch/arm/cpu/arm920t/s3c24x0
+cp /arch/arm/include/asm/arch-s3c24x0
+
+```C
+error: 'MACH_TYPE_SMDK2410' undeclared
+```
+gd->bd->bi_arch_number = 193; //MACH_TYPE_SMDK2410
+
+```c
+error "CONFIG_MTD_UBI_WL_threshold" UNDECLARED
+```
+/include/configs/smdk2410.h 
 
 
 
