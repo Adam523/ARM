@@ -12,7 +12,11 @@
 
 #ifndef __CONFIG_H
 #define __CONFIG_H
-#define DEBUG 1
+
+
+/* 
+ * #define DEBUG 1 
+ */
 
 /*
  * High Level Configuration Options
@@ -36,9 +40,25 @@
 /*
  * Hardware drivers
  */
+#if 0
 #define CONFIG_CS8900		/* we have a CS8900 on-board */
 #define CONFIG_CS8900_BASE	0x19000300
 #define CONFIG_CS8900_BUS16	/* the Linux driver does accesses as shorts */
+#else
+/* Ethernet */
+
+#define CONFIG_DRIVER_DM9000
+#define CONFIG_DM9000_BASE		0x20000000
+#define DM9000_IO			CONFIG_DM9000_BASE
+#define DM9000_DATA			(CONFIG_DM9000_BASE + 4)
+/*
+ * #define CONFIG_DM9000_USE_16BIT
+ * #define CONFIG_DM9000_NO_SROM
+ * #define CONFIG_NET_RETRY_COUNT		20
+ * #define CONFIG_RESET_PHY_R
+ */
+#endif
+
 
 /*
  * select serial console configuration
@@ -139,7 +159,7 @@
 
 #define CONFIG_SYS_MAX_FLASH_BANKS	1
 #define CONFIG_SYS_FLASH_BANKS_LIST     { CONFIG_SYS_FLASH_BASE }
-#define CONFIG_SYS_MAX_FLASH_SECT	(19)
+#define CONFIG_SYS_MAX_FLASH_SECT	(64)
 
 #define CONFIG_ENV_ADDR			(CONFIG_SYS_FLASH_BASE + 0x070000)
 #define CONFIG_ENV_IS_IN_FLASH
