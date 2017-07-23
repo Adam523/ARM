@@ -110,6 +110,19 @@
 #define CONFIG_NETMASK		255.255.255.0
 #define CONFIG_IPADDR		192.168.1.71
 #define CONFIG_SERVERIP		192.168.1.17
+#define CONFIG_ETHADDR      00:e3:28:21:32:23
+
+#define CONFIG_CMD_MTDPARTS
+#define CONFIG_MTD_DEVICES
+#define MTDIDS_DEFAULT  	"nand0 = jz2440"
+#define MTDPARTS_DEFAULT 	"mtdparts=jz2440-0:512k(u-boot),"\
+							"128k(params),"\
+							"2m(kernel),"  \
+							"-(rootfs)"
+
+#define CONFIG_BOOTARGS  "console=ttySAC0 root=/dev/mtdblock3 "
+/* #define CONFIG_BOOTCOMMAND "nand read 30000000 kernel;bootm 30000000" */
+
 
 #if defined(CONFIG_CMD_KGDB)
 #define CONFIG_KGDB_BAUDRATE	115200	/* speed to run kgdb serial port */
@@ -161,12 +174,17 @@
 #define CONFIG_SYS_FLASH_BANKS_LIST     { CONFIG_SYS_FLASH_BASE }
 #define CONFIG_SYS_MAX_FLASH_SECT	(64)
 
+#if 0
 #define CONFIG_ENV_ADDR			(CONFIG_SYS_FLASH_BASE + 0x070000)
 #define CONFIG_ENV_IS_IN_FLASH
 #define CONFIG_ENV_SIZE			0x10000
 /* allow to overwrite serial and ethaddr */
 #define CONFIG_ENV_OVERWRITE
-
+#endif
+#define CONFIG_ENV_IS_IN_NAND
+#define CONFIG_ENV_OFFSET  0x00080000
+#define CONFIG_ENV_SIZE    0x20000
+#define CONFIG_ENV_RANGE   0x20000
 /*
  * Size of malloc() pool
  * BZIP2 / LZO / LZMA need a lot of RAM
