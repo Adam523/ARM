@@ -1,4 +1,4 @@
-KERN_DIR = /work/system/linux-2.6.22.6
+KERN_DIR = /work/system/linux-3.4.2
 
 all:
 	make -C $(KERN_DIR) M=`pwd` modules 

@@ -19,9 +19,9 @@
 #include <asm/div64.h>
 
 #include <asm/mach/map.h>
-#include <asm/arch/regs-lcd.h>
-#include <asm/arch/regs-gpio.h>
-#include <asm/arch/fb.h>
+//#include <asm/arch/regs-lcd.h>
+//#include <asm/arch/regs-gpio.h>
+//#include <asm/arch/fb.h>
 
 static int s3c_lcdfb_setcolreg(unsigned int regno, unsigned int red,
 			     unsigned int green, unsigned int blue,
