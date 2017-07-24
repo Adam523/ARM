@@ -44,10 +44,12 @@
 #include <plat/clock.h>
 #include <plat/devs.h>
 #include <plat/cpu.h>
+#include <linux/dm9000.h>
 
 #include <plat/common-smdk.h>
 
 #include "common.h"
+#define MACH_SMDK2440_DM9K_BASE (S3C2410_CS4 + 0x300)
 
 static struct map_desc smdk2440_iodesc[] __initdata = {
 	/* ISA IO Space map (memory space selected by A24) */
@@ -103,6 +105,45 @@ static struct s3c2410_uartcfg smdk2440_uartcfgs[] __initdata = {
 		.ufcon	     = 0x51,
 	}
 };
+	/* DM9000AEP 10/100 ethernet controller */
+	
+static struct resource smdk2440_dm9k_resource[] = {
+	[0] = {
+		.start = MACH_SMDK2440_DM9K_BASE,
+		.end   = MACH_SMDK2440_DM9K_BASE + 3,
+		.flags = IORESOURCE_MEM
+	},
+	[1] = {
+		.start = MACH_SMDK2440_DM9K_BASE + 4,
+		.end   = MACH_SMDK2440_DM9K_BASE + 7,
+		.flags = IORESOURCE_MEM
+	},
+	[2] = {
+		.start = IRQ_EINT7,
+		.end   = IRQ_EINT7,
+		.flags = IORESOURCE_IRQ | IORESOURCE_IRQ_HIGHEDGE,
+	}
+};
+
+
+/*
+ * The DM9000 has no eeprom, and it's MAC address is set by
+ * the bootloader before starting the kernel.
+ */
+static struct dm9000_plat_data smdk2440_dm9k_pdata = {
+	.flags		= (DM9000_PLATF_16BITONLY | DM9000_PLATF_NO_EEPROM),
+};
+
+static struct platform_device smdk2440_device_eth = {
+	.name		= "dm9000",
+	.id		= -1,
+	.num_resources	= ARRAY_SIZE(smdk2440_dm9k_resource),
+	.resource	= smdk2440_dm9k_resource,
+	.dev		= {
+		.platform_data	= &smdk2440_dm9k_pdata,
+	},
+};
+
 
 /* LCD driver info */
 
@@ -157,6 +198,7 @@ static struct platform_device *smdk2440_devices[] __initdata = {
 	&s3c_device_wdt,
 	&s3c_device_i2c0,
 	&s3c_device_iis,
+	&smdk2440_device_eth,
 };
 
 static void __init smdk2440_map_io(void)
