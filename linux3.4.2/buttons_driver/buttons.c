@@ -17,9 +17,19 @@
 #include <linux/input.h>
 #include <linux/irq.h>
 
-#include <asm/gpio.h>
-#include <asm/io.h>
-#include <asm/arch/regs-gpio.h>
+//#include <asm/gpio.h>
+//#include <asm/io.h>
+#include <linux/gpio.h>
+
+
+#include <linux/io.h>
+
+#include <mach/regs-gpio.h>
+#include <mach/leds-gpio.h>
+#include <plat/common-smdk.h>
+#include <plat/gpio-cfg.h>
+
+//#include <asm/arch/regs-gpio.h>
 
 struct pin_desc{
 	int irq;
@@ -29,10 +39,10 @@ struct pin_desc{
 };
 
 struct pin_desc pins_desc[4] = {
-	{IRQ_EINT0,  "S2", S3C2410_GPF0,   KEY_L},
-	{IRQ_EINT2,  "S3", S3C2410_GPF2,   KEY_S},
-	{IRQ_EINT11, "S4", S3C2410_GPG3,   KEY_ENTER},
-	{IRQ_EINT19, "S5",  S3C2410_GPG11, KEY_LEFTSHIFT},
+	{IRQ_EINT0,  "S2", S3C2410_GPF(0),   KEY_L},
+	{IRQ_EINT2,  "S3", S3C2410_GPF(2),   KEY_S},
+	{IRQ_EINT11, "S4", S3C2410_GPG(3),   KEY_ENTER},
+	{IRQ_EINT19, "S5",  S3C2410_GPG(11), KEY_LEFTSHIFT},
 };
 
 static struct input_dev *buttons_dev;
@@ -99,7 +109,7 @@ static int buttons_init(void)
 	
 	for (i = 0; i < 4; i++)
 	{
-		request_irq(pins_desc[i].irq, buttons_irq, IRQT_BOTHEDGE, pins_desc[i].name, &pins_desc[i]);
+		request_irq(pins_desc[i].irq, buttons_irq, (IRQF_TRIGGER_RISING | IRQF_TRIGGER_DOWN), pins_desc[i].name, &pins_desc[i]);
 	}
 	
 	return 0;
